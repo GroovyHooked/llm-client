@@ -1,0 +1,62 @@
+.send-icon {
+  width: 20px;
+}
+
+.btn-send {
+  position: absolute;
+  right: calc(2vw + 20px);
+  top: 32px;
+}
+
+.textarea-wrapper {
+  display: flex;
+  align-items: center;
+  width: 95%;
+  min-height: 40px;
+  border-radius: 10px;
+  border: 0.5px solid grey;
+}
+
+textarea {
+  height: 20px;
+  max-height: 120px;
+  padding: 5px 15px;
+  font-size: 17px;
+  width: 100%;
+  border-radius: 10px;
+  overflow: auto;
+  outline: none;
+  box-shadow: none;
+  resize: none; 
+  border: none;
+}
+
+textarea::placeholder {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999; 
+}
+
+.input-field {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid rgb(209, 209, 209);
+  position: fixed;
+  bottom: 0;
+  height: 85px;
+  max-height: 130px;
+  background-color: #fbfbfb;
+}
+
+.input-field-large {
+  flex: 1;
+  left: 230px;
+  right: 0;
+  /* right: 0; */
+}
+
+.input-field-small {
+  width: 100%;
+}

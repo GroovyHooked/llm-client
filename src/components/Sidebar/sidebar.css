@@ -1,0 +1,139 @@
+.side-bar {
+  height: 45px;
+  background-color: #343541;
+}
+
+.btn-burger {
+  filter: invert();
+}
+
+.burger-menu {
+  position: relative;
+  top: 6px;
+  width: 35px;
+}
+
+.close-menu {
+  position: relative;
+  top: 13px;
+  left: 8px;
+  width: 20px;
+}
+
+.open {
+  position: relative;
+  left: 230px;
+}
+.discussions {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  z-index: 2;
+  background-color: #202123;
+  color: white;
+  width: 0px;
+  animation: extendSideBar 0.2s ease-in-out forwards;
+}
+
+.new-discussion,
+.which-model {
+  border: 0.5px solid white;
+  border-radius: 5px;
+  height: 40px;
+  width: 0px;
+  margin: 22px 25px 5px;
+  animation: extendSideBarContent 0.2s ease-in-out forwards;
+}
+
+@keyframes extendSideBar {
+  100% {
+    width: 230px;
+  }
+}
+@keyframes extendSideBarContent {
+  100% {
+    width: 180px;
+  }
+}
+
+ul > li {
+  height: 30px;
+  margin: 10px 10px;
+  width: 180px;
+  text-align: center;
+}
+
+.which-model {
+  border: none;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 10px;
+}
+
+.gpt3-model,
+.gpt4-model {
+  border: 0.1px solid white;
+  border-radius: 5px;
+  width: 85px;
+  height: 35px;
+}
+
+.new-discussion:hover,
+.gpt3-model:hover,
+.gpt4-model:hover {
+  background-color: #373946;
+}
+
+.temperature-wrapper, .tokens-wrapper {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 10px
+}
+
+.temperature, .tokens {
+  width: 180px;
+  appearance: none;
+  accent-color: coral;
+}
+
+.temperature::-webkit-slider-runnable-track, .tokens::-webkit-slider-runnable-track {
+  position: relative;
+  height: 2px;
+  background: #ddd;
+  border: none;
+  border-radius: 3px;
+}
+
+.temperature::-webkit-slider-thumb, .tokens::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: none;
+  height: 14px;
+  width: 14px;
+  border-radius: 50%;
+  background: #bcc3c8;
+  margin-top: -6px;;
+}
+
+.select-prompt {
+  border: none;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 30px 50px 10px;
+}
+
+.sub-prompts {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.btn-prompt-title {
+  border: 0.5px solid white;
+  border-radius: 5px;
+  height: 40px;
+  width: 100px;
+  margin: 5px auto;
+}

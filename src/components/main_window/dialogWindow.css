@@ -1,0 +1,40 @@
+.dialog-div {
+  position: absolute;
+}
+
+.dialog-div-small {
+  left: 0;
+  right: 0;
+  top: 45px;
+  bottom: 70px;
+}
+
+.dialog-div-large {
+  left: 230px;
+  right: 0;
+  top: 0;
+  bottom: 70px;
+}
+
+.dialog {
+  overflow: scroll;
+  padding-bottom: 85px;
+}
+
+.message {
+  padding: 10px 50px;
+  font-family: "Open Sans", sans-serif;
+}
+
+.gpt {
+  background-color: rgb(235, 233, 233);
+}
+
+.display-model {
+  width: 100%;
+  background-color: #ececf1;
+  height: 44px;
+  text-align: center;
+  line-height: 44px;
+  font-family: "Open Sans", sans-serif;
+}
