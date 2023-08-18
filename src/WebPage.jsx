@@ -1,38 +1,58 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import "./WebPage.css";
 import { Sidebar } from "./components/Sidebar/Sidebar.jsx";
 import { DialogWindow } from "./components/main_window/DialogWindow.jsx";
 import { InputField } from "./components/InputField/InputField.jsx";
 import { sendMessage } from "./utils/communication.js";
 import { prompts } from "./utils/prompts.js";
-
-const initVersion = "gpt-3.5-turbo";
+import {
+  setUserContent,
+  setGptResponse,
+  setDialogContent,
+  handleGptResponse,
+  setModelVersion,
+  clearDiscussion,
+  setTempInputValue,
+  setTempValue,
+  setTokenValue,
+  setMaxTokens,
+  setPromptCategory,
+  setPromptContent,
+} from "./state_management/action.js";
 
 export const WebPage = () => {
-  const [userContent, userContentSetter] = useState("");
-  const [gptResponse, gptResponseSetter] = useState("");
-  const [dialogContent, dialogContentSetter] = useState([]);
-  const [needToHandleResponse, needToHandleResponseSetter] = useState(false);
-  const [modelVersion, modelVersionSetter] = useState(initVersion);
-  const [shoudlClearDiscussion, shoudlClearDiscussionSetter] = useState(false);
-  const [tempInputValue, tempInputValueSetter] = useState(0);
-  const [tempValue, tempValueSetter] = useState(0);
-  const [tokenValue, tokenValueSetter] = useState(1000)
-  const [maxTokens, maxTokensSetter] = useState(4096)
-  const [promptCategory, setPromptCategory] = useState('');
-  const [promptContent, promptContentSetter] = useState('')
+  const dispatch = useDispatch();
+
+  const userContent = useSelector((state) => state.userContent);
+  const gptResponse = useSelector((state) => state.gptResponse);
+  const dialogContent = useSelector((state) => state.dialogContent);
+  const needToHandleResponse = useSelector(
+    (state) => state.needToHandleResponse
+  );
+  const modelVersion = useSelector((state) => state.modelVersion);
+  const shouldClearDiscussion = useSelector(
+    (state) => state.shouldClearDiscussion
+  );
+  const tempInputValue = useSelector((state) => state.tempInputValue);
+  const tempValue = useSelector((state) => state.tempValue);
+  const tokenValue = useSelector((state) => state.tokenValue);
+  const maxTokens = useSelector((state) => state.maxTokens);
+  const promptCategory = useSelector((state) => state.promptCategory);
+  const promptContent = useSelector((state) => state.promptContent);
+
 
   const retreivePromptContent = (e) => {
-    prompts[promptCategory].forEach(element => {
-      if(e.target.value === element.title){
-        promptContentSetter(element.content);
+    prompts[promptCategory].forEach((element) => {
+      if (e.target.value === element.title) {
+        dispatch(setPromptContent(element.content));
       }
     });
   };
 
   useEffect(() => {
-    tempValueSetter(Math.round(tempInputValue * 0.01 * 100) / 100);
-  }, [tempInputValue])
+    dispatch(setTempValue(Math.round(tempInputValue * 0.01 * 100) / 100));
+  }, [tempInputValue]);
 
   useEffect(() => {
     if (dialogContent.length > 0 && needToHandleResponse) {
@@ -43,43 +63,42 @@ export const WebPage = () => {
 
   const handleGPTresponse = async (text) => {
     try {
-      const response = await sendMessage(text, modelVersion, tempValue, tokenValue);
-      needToHandleResponseSetter(false);
-      gptResponseSetter(response);
-      dialogContentSetter((prevContent) => [
-        ...prevContent,
-        { role: "assistant", content: response },
-      ]);
+      const response = await sendMessage(
+        text,
+        modelVersion,
+        tempValue,
+        tokenValue
+      );
+      dispatch(handleGptResponse(false));
+      dispatch(setGptResponse(response));
+      dispatch(setDialogContent(dialogContent, "assistant", response));
     } catch (error) {
       console.error(error);
     }
   };
 
   const handleInputEnter = (text) => {
-    dialogContentSetter((prevContent) => [
-      ...prevContent,
-      { role: "user", content: text },
-    ]);
-    userContentSetter(text);
-    needToHandleResponseSetter(true);
+    dispatch(setDialogContent(dialogContent, "user", text));
+    dispatch(setUserContent(text));
+    dispatch(handleGptResponse(true));
   };
 
   const changeModel = (model) => {
     if (model.target.className === "gpt3-model") {
-      modelVersionSetter("gpt-3.5-turbo");
-      maxTokensSetter(4096)
+      dispatch(setModelVersion("gpt-3.5-turbo"));
+      dispatch(setMaxTokens(4096));
     } else if (model.target.className === "gpt4-model") {
-      modelVersionSetter("gpt-4");
-      maxTokensSetter(8192)
+      dispatch(setModelVersion("gpt-4"));
+      dispatch(setMaxTokens(8192));
     }
   };
 
   const clearDialog = () => {
-    shoudlClearDiscussionSetter(true);
-    dialogContentSetter([]);
+    dispatch(clearDiscussion(true));
+    dispatch(setDialogContent([]));
     setTimeout(() => {
-      shoudlClearDiscussionSetter(false);
-    }, 100);
+      dispatch(clearDiscussion(false));
+    }, 3000);
   };
 
   return (
@@ -89,24 +108,27 @@ export const WebPage = () => {
         clearDialog={clearDialog}
         tempValue={tempValue}
         tempInputValue={tempInputValue}
-        tempInputValueSetter={tempInputValueSetter}
+        tempInputValueSetter={(value) => {
+          dispatch(setTempInputValue(value));
+        }}
         tokenValue={tokenValue}
-        tokenValueSetter={tokenValueSetter}
+        tokenValueSetter={(value) => {
+          dispatch(setTokenValue(value));
+        }}
         maxTokens={maxTokens}
         promptCategory={promptCategory}
-        setPromptCategory={setPromptCategory}
+        setPromptCategory={(value) => {
+          dispatch(setPromptCategory(value));
+        }}
         retreivePromptContent={retreivePromptContent}
       />
       <DialogWindow
         userContent={userContent}
         gptContent={gptResponse}
         modelVersion={modelVersion}
-        shoudlClearDiscussion={shoudlClearDiscussion}
+        shouldClearDiscussion={shouldClearDiscussion}
       />
-      <InputField 
-        onEnter={handleInputEnter} 
-        promptContent={promptContent}
-        />
+      <InputField onEnter={handleInputEnter} promptContent={promptContent} />
     </>
   );
 };

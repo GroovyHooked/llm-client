@@ -9,29 +9,32 @@ export const DialogWindow = ({
   userContent,
   gptContent,
   modelVersion,
-  shoudlClearDiscussion,
+  shouldClearDiscussion,
 }) => {
-  useEffect(() => {
-    if (shoudlClearDiscussion) {
-      dialogRef.current.innerHTML = "";
-    }
-  }, [modelVersion, shoudlClearDiscussion]);
   const dialogRef = useRef(null);
   const screenSize = Mediaqueries();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const md = new MarkdownIt();
 
   useEffect(() => {
-    if (!userContent) return;
+    if (shouldClearDiscussion) {
+      dialogRef.current.innerHTML = "";
+    }
+  }, [modelVersion, shouldClearDiscussion]);
 
-    dialogRef.current.innerHTML += `<div class="message user" >${userContent}</div>`;
+  useEffect(() => {
+    if (userContent) {
+      dialogRef.current.innerHTML += `<div class="message user" >${userContent}</div>`;
+    }
   }, [userContent]);
 
   useEffect(() => {
-    if (!gptContent) return;
-    const htmlContent = md.render(gptContent);
-    dialogRef.current.innerHTML += `</ReactMarkdown><div class="message gpt">
-                                      ${htmlContent}
-                                    </div></ReactMarkdown>`;
+    if (gptContent) {
+      const htmlContent = md.render(gptContent);
+      dialogRef.current.innerHTML += `<div class="message gpt">
+                                        ${htmlContent}
+                                      </div></div>`;
+    }
   }, [gptContent]);
 
   return (

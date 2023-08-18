@@ -26,7 +26,8 @@ export const InputField = ({ onEnter, promptContent }) => {
     const textArea = textareaRef.current;
     const inputDiv = divRef.current;
     if (event.shiftKey && event.key === "Enter") {
-      setInputText((oldText) => `${oldText}\n`);
+      event.preventDefault();
+      setInputText((oldText) => `${oldText}\r\n`);        
     } else if (event.key === "Enter") {
       event.preventDefault();
       onEnter(inputText);
