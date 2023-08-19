@@ -1,5 +1,7 @@
 .dialog-div {
   position: absolute;
+  overflow: scroll;
+
 }
 
 .dialog-div-small {
@@ -18,7 +20,8 @@
 
 .dialog {
   overflow: scroll;
-  padding-bottom: 85px;
+  overflow-y: auto;
+  padding-bottom: 15px;
 }
 
 .message {

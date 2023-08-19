@@ -12,9 +12,23 @@ export const DialogWindow = ({
   shouldClearDiscussion,
 }) => {
   const dialogRef = useRef(null);
+  const dialogContainerRef = useRef(null); // Reference to the parent container
+
   const screenSize = Mediaqueries();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const md = new MarkdownIt();
+
+  const scrollToBottom = () => {
+    dialogContainerRef.current.scrollTop =
+      dialogContainerRef.current.scrollHeight;
+    // You can also try focusing on the last message if needed
+    const lastMessage = dialogContainerRef.current.querySelector(
+      ".message:last-child"
+    );
+    if (lastMessage) {
+      lastMessage.focus();
+    }
+  };
 
   useEffect(() => {
     if (shouldClearDiscussion) {
@@ -25,6 +39,7 @@ export const DialogWindow = ({
   useEffect(() => {
     if (userContent) {
       dialogRef.current.innerHTML += `<div class="message user" >${userContent}</div>`;
+      scrollToBottom();
     }
   }, [userContent]);
 
@@ -35,6 +50,7 @@ export const DialogWindow = ({
                                         ${htmlContent}
                                       </div></div>`;
     }
+    scrollToBottom();
   }, [gptContent]);
 
   return (
@@ -44,6 +60,7 @@ export const DialogWindow = ({
           ? "dialog-div dialog-div-large"
           : "dialog-div dialog-div-small"
       }
+      ref={dialogContainerRef} // Set the ref for the parent container
     >
       <div className="display-model">{modelVersion}</div>
       <div className="dialog" ref={dialogRef}></div>
