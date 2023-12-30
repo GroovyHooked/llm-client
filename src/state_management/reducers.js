@@ -17,11 +17,11 @@ const reducer = (state = initialState, action) => {
   switch (action.type) {
     case "SET_USER_CONTENT":
       return { ...state, userContent: action.payload };
-    case "SET_GPT_RESPONSE":
+    case "SET_MODEL_RESPONSE":
       return { ...state, gptResponse: action.payload };
     case "SET_DIALOG_CONTENT":
       return { ...state, dialogContent: action.payload };
-    case "HANDLE_GPT_RESPONSE":
+    case "HANDLE_MODEL_RESPONSE":
       return { ...state, needToHandleResponse: action.payload };
     case "SET_MODEL_VERSION":
       return { ...state, modelVersion: action.payload };

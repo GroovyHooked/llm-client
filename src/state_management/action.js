@@ -3,8 +3,8 @@ export const setUserContent = (text) => ({
     payload: text
 })
 
-export const setGptResponse = (text) => ({
-    type: 'SET_GPT_RESPONSE',
+export const setModelResponse = (text) => ({
+    type: 'SET_MODEL_RESPONSE',
     payload: text,
 })
 
@@ -13,8 +13,8 @@ export const setDialogContent = (dialogContent, role, content) => ({
     payload: [...dialogContent, { role, content }],
 })
 
-export const handleGptResponse = (bol) => ({ 
-    type: 'HANDLE_GPT_RESPONSE',
+export const handleModelResponse = (bol) => ({ 
+    type: 'HANDLE_MODEL_RESPONSE',
     payload: bol
 });
 

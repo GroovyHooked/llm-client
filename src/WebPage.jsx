@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./WebPage.css";
 import { Sidebar } from "./components/Sidebar/Sidebar.jsx";
@@ -8,9 +8,9 @@ import { sendMessage } from "./utils/communication.js";
 import { prompts } from "./utils/prompts.js";
 import {
   setUserContent,
-  setGptResponse,
+  setModelResponse,
   setDialogContent,
-  handleGptResponse,
+  handleModelResponse,
   setModelVersion,
   clearDiscussion,
   setTempInputValue,
@@ -50,16 +50,57 @@ export const WebPage = () => {
     });
   };
 
+  const communicateWithLlama = async (dialogContent) => {
+    console.log({dialogContent: dialogContent[dialogContent.length - 1].content});
+    return await fetch('http://localhost:3000/api', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      messages: dialogContent[dialogContent.length - 1].content,
+      model: 'llama',
+      temperature: 0,
+      max_tokens: 300,
+    }),
+  })
+    .then(response => response.json())
+    .then(data => {
+      console.log({data})
+      return data.stdout
+    })
+    .catch(error => console.error(error));
+  
+  }
+
   useEffect(() => {
     dispatch(setTempValue(Math.round(tempInputValue * 0.01 * 100) / 100));
   }, [tempInputValue]);
 
   useEffect(() => {
     if (dialogContent.length > 0 && needToHandleResponse) {
-      handleGPTresponse(dialogContent);
+      if(modelVersion === "gpt-3.5-turbo" || modelVersion === "gpt-4"){
+        handleGPTresponse(dialogContent);
+      }
+      if(modelVersion === 'llama'){
+        //handleLlamaResponse(dialogContent)
+        handleLlamaResponse()
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dialogContent, needToHandleResponse]);
+
+  async function handleLlamaResponse(){
+    try {
+      const response = await communicateWithLlama(dialogContent)
+      dispatch(handleModelResponse(false));
+      dispatch(setModelResponse(response));
+      dispatch(setDialogContent(dialogContent, "assistant", response));
+    } catch(error){
+      console.error(error)
+    }
+
+  }
 
   const handleGPTresponse = async (text) => {
     try {
@@ -69,8 +110,8 @@ export const WebPage = () => {
         tempValue,
         tokenValue
       );
-      dispatch(handleGptResponse(false));
-      dispatch(setGptResponse(response));
+      dispatch(handleModelResponse(false));
+      dispatch(setModelResponse(response));
       dispatch(setDialogContent(dialogContent, "assistant", response));
     } catch (error) {
       console.error(error);
@@ -80,7 +121,7 @@ export const WebPage = () => {
   const handleInputEnter = (text) => {
     dispatch(setDialogContent(dialogContent, "user", text));
     dispatch(setUserContent(text));
-    dispatch(handleGptResponse(true));
+    dispatch(handleModelResponse(true));
   };
 
   const changeModel = (model) => {
@@ -90,6 +131,9 @@ export const WebPage = () => {
     } else if (model.target.className === "gpt4-model") {
       dispatch(setModelVersion("gpt-4"));
       dispatch(setMaxTokens(8192));
+    } else if (model.target.className === "llama"){
+      dispatch(setModelVersion("llama"));
+      dispatch(setMaxTokens(508));
     }
   };
 
@@ -132,3 +176,4 @@ export const WebPage = () => {
     </>
   );
 };
+

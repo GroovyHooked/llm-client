@@ -127,6 +127,9 @@ const WhichModel = ({ changeModel }) => {
       <button className="gpt4-model" onClick={changeModel}>
         GPT4
       </button>
+      <button className="llama" onClick={changeModel}>
+        Llama
+      </button>
     </div>
   );
 };
