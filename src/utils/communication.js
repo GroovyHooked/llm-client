@@ -1,5 +1,5 @@
 export const sendMessage = async (messages, model, temperature, max_tokens) => {
-  console.log({ messages, model, temperature, max_tokens })
+  //console.log({ messages, model, temperature, max_tokens })
   try {
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -15,7 +15,6 @@ export const sendMessage = async (messages, model, temperature, max_tokens) => {
       }),
     });
     const data = await response.json();
-    // console.log({ data });
     const text = data.choices[0].message.content;
     return text;
   } catch (error) {

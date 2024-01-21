@@ -4,12 +4,14 @@ import MarkdownIt from "markdown-it";
 // import ReactMarkdown from "react-markdown";
 import { Mediaqueries } from "../../utils/mediaQueries.js";
 import "./dialogWindow.css";
+import { Loader } from "../loader/loader.jsx";
 
 export const DialogWindow = ({
   userContent,
   gptContent,
   modelVersion,
   shouldClearDiscussion,
+  needToHandleResponse,
 }) => {
   const dialogRef = useRef(null);
   const dialogContainerRef = useRef(null); // Reference to the parent container
@@ -21,7 +23,6 @@ export const DialogWindow = ({
   const scrollToBottom = () => {
     dialogContainerRef.current.scrollTop =
       dialogContainerRef.current.scrollHeight;
-    // You can also try focusing on the last message if needed
     const lastMessage = dialogContainerRef.current.querySelector(
       ".message:last-child"
     );
@@ -62,8 +63,9 @@ export const DialogWindow = ({
       }
       ref={dialogContainerRef} // Set the ref for the parent container
     >
-      <div className="display-model">{modelVersion}</div>
+      <div className="display-model">{modelVersion[0].toUpperCase() + modelVersion.slice(1)}</div>
       <div className="dialog" ref={dialogRef}></div>
+      {needToHandleResponse && <Loader />}
     </div>
   );
 };
