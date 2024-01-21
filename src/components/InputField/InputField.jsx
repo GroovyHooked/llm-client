@@ -27,7 +27,7 @@ export const InputField = ({ onEnter, promptContent }) => {
     const inputDiv = divRef.current;
     if (event.shiftKey && event.key === "Enter") {
       event.preventDefault();
-      setInputText((oldText) => `${oldText}\r\n`);        
+      setInputText((oldText) => `${oldText}\r\n`);
     } else if (event.key === "Enter") {
       event.preventDefault();
       onEnter(inputText);
@@ -36,6 +36,13 @@ export const InputField = ({ onEnter, promptContent }) => {
       inputDiv.style.height = `85px`;
     }
   };
+
+  const handleSendClick = () => {
+    onEnter(inputText);
+    setInputText("");
+    textArea.style.height = `20px`;
+    inputDiv.style.height = `85px`;
+  }
 
   const insertNewlines = (str, wordsPerLine = 6) => {
     const words = str.split(" ");
@@ -75,7 +82,7 @@ export const InputField = ({ onEnter, promptContent }) => {
           placeholder="Send a message"
         ></textarea>
       </div>
-      <button className="btn btn-send">
+      <button className="btn btn-send" onClick={handleSendClick}>
         <img src={sendIcon} className="send-icon"></img>
       </button>
     </div>

@@ -3,7 +3,7 @@ const initialState = {
   gptResponse: "",
   dialogContent: [],
   needToHandleResponse: false,
-  modelVersion: "gpt-3.5-turbo",
+  modelVersion: "mistral",
   shouldClearDiscussion: false,
   tempInputValue: 0,
   tempValue: 0,
@@ -26,7 +26,8 @@ const reducer = (state = initialState, action) => {
     case "SET_MODEL_VERSION":
       return { ...state, modelVersion: action.payload };
     case "CLEAR_DISCUSSION":
-      return { ...state, shouldClearDiscussion: action.payload };
+      action.payload ? state.dialogContent = [] : null;
+      return { ...state, shouldClearDiscussion: action.payload  };
     case "TEMP_INPUT_VALUE":
       return { ...state, tempInputValue: action.payload };
     case "TEMP_VALUE":

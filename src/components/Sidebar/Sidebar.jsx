@@ -130,6 +130,9 @@ const WhichModel = ({ changeModel }) => {
       <button className="llama" onClick={changeModel}>
         Llama
       </button>
+      <button className="mistral" onClick={changeModel}>
+        Mistral
+      </button>
     </div>
   );
 };

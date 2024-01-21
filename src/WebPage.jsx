@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./WebPage.css";
 import { Sidebar } from "./components/Sidebar/Sidebar.jsx";
 import { DialogWindow } from "./components/main_window/DialogWindow.jsx";
 import { InputField } from "./components/InputField/InputField.jsx";
-import { sendMessage } from "./utils/communication.js";
+import { sendMessage, communicateWithLlama, communicateWithMistral } from "./utils/communication.js";
 import { prompts } from "./utils/prompts.js";
 import {
   setUserContent,
@@ -20,6 +20,7 @@ import {
   setPromptCategory,
   setPromptContent,
 } from "./state_management/action.js";
+
 
 export const WebPage = () => {
   const dispatch = useDispatch();
@@ -50,29 +51,6 @@ export const WebPage = () => {
     });
   };
 
-  const communicateWithLlama = async (dialogContent) => {
-    console.log({dialogContent: dialogContent[dialogContent.length - 1].content});
-    return await fetch('http://localhost:3000/api', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      messages: dialogContent[dialogContent.length - 1].content,
-      model: 'llama',
-      temperature: 0,
-      max_tokens: 300,
-    }),
-  })
-    .then(response => response.json())
-    .then(data => {
-      console.log({data})
-      return data.stdout
-    })
-    .catch(error => console.error(error));
-  
-  }
-
   useEffect(() => {
     dispatch(setTempValue(Math.round(tempInputValue * 0.01 * 100) / 100));
   }, [tempInputValue]);
@@ -83,8 +61,10 @@ export const WebPage = () => {
         handleGPTresponse(dialogContent);
       }
       if(modelVersion === 'llama'){
-        //handleLlamaResponse(dialogContent)
         handleLlamaResponse()
+      }
+      if(modelVersion === 'mistral'){
+        handleMistralResponse()
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -99,7 +79,17 @@ export const WebPage = () => {
     } catch(error){
       console.error(error)
     }
+  }
 
+  async function handleMistralResponse(){
+    try {
+      const response = await communicateWithMistral(dialogContent)
+      dispatch(handleModelResponse(false));
+      dispatch(setModelResponse(response));
+      dispatch(setDialogContent(dialogContent, "assistant", response));
+    } catch(error){
+      console.error(error)
+    }
   }
 
   const handleGPTresponse = async (text) => {
@@ -134,15 +124,17 @@ export const WebPage = () => {
     } else if (model.target.className === "llama"){
       dispatch(setModelVersion("llama"));
       dispatch(setMaxTokens(508));
+    } else if (model.target.className === "mistral"){
+      dispatch(setModelVersion("mistral"));
+      dispatch(setMaxTokens(508));
     }
   };
 
   const clearDialog = () => {
     dispatch(clearDiscussion(true));
-    dispatch(setDialogContent([]));
     setTimeout(() => {
       dispatch(clearDiscussion(false));
-    }, 3000);
+    }, 1000);
   };
 
   return (
@@ -171,6 +163,7 @@ export const WebPage = () => {
         gptContent={gptResponse}
         modelVersion={modelVersion}
         shouldClearDiscussion={shouldClearDiscussion}
+        needToHandleResponse={needToHandleResponse}
       />
       <InputField onEnter={handleInputEnter} promptContent={promptContent} />
     </>
