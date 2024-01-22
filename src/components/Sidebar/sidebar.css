@@ -24,7 +24,7 @@
   position: relative;
   left: 230px;
 }
-.discussions {
+.side-bar-content {
   position: fixed;
   top: 0;
   bottom: 0;
@@ -35,8 +35,8 @@
   animation: extendSideBar 0.2s ease-in-out forwards;
 }
 
-.new-discussion,
-.which-model {
+.clear-dialog,
+.swich-model {
   border: 0.5px solid white;
   border-radius: 5px;
   height: 40px;
@@ -63,7 +63,7 @@ ul > li {
   text-align: center;
 }
 
-.which-model {
+.swich-model {
   border: none;
   display: flex;
   justify-content: space-evenly;
@@ -83,7 +83,7 @@ ul > li {
   height: 35px;
 }
 
-.new-discussion:hover,
+.clear-dialog:hover,
 .gpt3-model:hover,
 .gpt4-model:hover,
 .llama:hover

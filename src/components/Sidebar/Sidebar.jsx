@@ -21,13 +21,14 @@ export const Sidebar = ({
 }) => {
   const screenSize = Mediaqueries();
   const buttonRef = useRef(null);
-  const [isDiscussionsOpen, isDiscussionsOpenSetter] = useState(false);
-  const closeOrOpenDiscussions = () => {
-    if (isDiscussionsOpen) {
-      isDiscussionsOpenSetter(false);
+  const [isSidebarOpen, isSidebarOpenSetter] = useState(false);
+  console.log({isSidebarOpen});
+  const closeOrOpenSidebar = () => {
+    if (isSidebarOpen) {
+      isSidebarOpenSetter(false);
       buttonRef.current.classList.remove("open");
     } else {
-      isDiscussionsOpenSetter(true);
+      isSidebarOpenSetter(true);
       buttonRef.current.classList.add("open");
     }
   };
@@ -35,20 +36,20 @@ export const Sidebar = ({
   return (
     <div className={screenSize.isLarge ? "" : "side-bar"}>
       <button
-        onClick={closeOrOpenDiscussions}
+        onClick={closeOrOpenSidebar}
         className="btn btn-burger"
         ref={buttonRef}
       >
         {!screenSize.isLarge ? (
           <img
-            src={isDiscussionsOpen ? closeMenu : burgerMenu}
-            className={isDiscussionsOpen ? "close-menu" : "burger-menu"}
+            src={isSidebarOpen ? closeMenu : burgerMenu}
+            className={isSidebarOpen ? "close-menu" : "burger-menu"}
           ></img>
         ) : null}
       </button>
 
       {screenSize.isLarge ? (
-        <Discussions
+        <SidebarContent
           changeModel={changeModel}
           clearDialog={clearDialog}
           tempValue={tempValue}
@@ -61,8 +62,8 @@ export const Sidebar = ({
           setPromptCategory={setPromptCategory}
           retreivePromptContent={retreivePromptContent}
         />
-      ) : isDiscussionsOpen ? (
-        <Discussions
+      ) : isSidebarOpen ? (
+        <SidebarContent
           changeModel={changeModel}
           clearDialog={clearDialog}
           tempValue={tempValue}
@@ -80,7 +81,7 @@ export const Sidebar = ({
   );
 };
 
-const Discussions = ({
+const SidebarContent = ({
   changeModel,
   clearDialog,
   tempValue,
@@ -94,11 +95,11 @@ const Discussions = ({
   retreivePromptContent
 }) => {
   return (
-    <div className="discussions">
-      <button className="new-discussion" onClick={clearDialog}>
+    <div className="side-bar-content">
+      <button className="clear-dialog" onClick={clearDialog}>
         New chat
       </button>
-      <WhichModel changeModel={changeModel} />
+      <SwitchModel changeModel={changeModel} />
       <Temperature
         tempValue={tempValue}
         tempInputValueSetter={tempInputValueSetter}
@@ -118,9 +119,9 @@ const Discussions = ({
   );
 };
 
-const WhichModel = ({ changeModel }) => {
+const SwitchModel = ({ changeModel }) => {
   return (
-    <div className="which-model">
+    <div className="swich-model">
       <button className="gpt3-model" onClick={changeModel}>
         GPT3
       </button>
