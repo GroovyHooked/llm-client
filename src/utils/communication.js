@@ -1,3 +1,5 @@
+import 'dotenv/config'
+
 export const sendToOpenAiApi = async (messages, model, temperature, max_tokens) => {
   //console.log({ messages, model, temperature, max_tokens })
   try {
@@ -5,7 +7,7 @@ export const sendToOpenAiApi = async (messages, model, temperature, max_tokens) 
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer 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`,
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
         model,
