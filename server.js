@@ -13,9 +13,9 @@ const mistralVersion1 = "mistral-7b-instruct-v0.1.Q2_K.gguf"
 const mistralVersion2 = "mistral-7b-instruct-v0.2.Q2_K.gguf"
 const llamaVersion2 = "llama-2-7b-chat.Q4_K_M.gguf"
 
-const createModelSession = async (modelPath) => {
+const createModelSession = async (modelFile) => {
   const model = new LlamaModel({
-    modelPath: path.join(__dirname, "models", modelPath)
+    modelPath: path.join(__dirname, "models", modelFile)
   });
   const context = new LlamaContext({ model });
   const session = new LlamaChatSession({ context });
