@@ -1,14 +1,31 @@
 import { useEffect, useState, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setUserContent,
+  setDialogContent,
+  handleModelResponse,
+} from "../../state_management/actions.js";
 import { Mediaqueries } from "../../utils/mediaQueries.js";
 import sendIcon from "../../assets/send.png";
 import "./input_field.css";
 
 // eslint-disable-next-line react/prop-types
-export const InputField = ({ onEnter, promptContent }) => {
+export const InputField = () => {
+  const dispatch = useDispatch();
+
+  const promptContent = useSelector((state) => state.promptContent);
+  const dialogContent = useSelector((state) => state.dialogContent);
+
   const [inputText, setInputText] = useState("");
   const textareaRef = useRef(null);
   const divRef = useRef(null);
   const screenSize = Mediaqueries();
+
+  const handleInputOnEnter = (text) => {
+    dispatch(dispatch(setDialogContent(dialogContent, "user", text)))
+    dispatch(setUserContent(text))
+    dispatch(handleModelResponse(true))
+  };
 
   const handleInputChange = (event) => {
     const textArea = textareaRef.current;
@@ -30,7 +47,7 @@ export const InputField = ({ onEnter, promptContent }) => {
       setInputText((oldText) => `${oldText}\r\n`);
     } else if (event.key === "Enter") {
       event.preventDefault();
-      onEnter(inputText);
+      handleInputOnEnter(inputText);
       setInputText("");
       textArea.style.height = `20px`;
       inputDiv.style.height = `85px`;
@@ -38,7 +55,7 @@ export const InputField = ({ onEnter, promptContent }) => {
   };
 
   const handleSendClick = () => {
-    onEnter(inputText);
+    handleInputOnEnter(inputText);
     setInputText("");
     textArea.style.height = `20px`;
     inputDiv.style.height = `85px`;

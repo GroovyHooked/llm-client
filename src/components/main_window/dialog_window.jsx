@@ -1,21 +1,25 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import MarkdownIt from "markdown-it";
 // import ReactMarkdown from "react-markdown";
 import { Mediaqueries } from "../../utils/mediaQueries.js";
 import "./dialog_window.css";
 import { Loader } from "../loader/loader.jsx";
 
-export const DialogWindow = ({
-  userContent,
-  gptContent,
-  modelVersion,
-  shouldClearDiscussion,
-  needToHandleResponse,
-}) => {
+export const DialogWindow = () => {
   const dialogRef = useRef(null);
   const dialogContainerRef = useRef(null); // Reference to the parent container
+  const userContent = useSelector((state) => state.userContent);
+  const gptContent = useSelector((state) => state.gptResponse);
+  const modelVersion = useSelector((state) => state.modelVersion);
 
+  const shouldCleaChatInterface = useSelector(
+    (state) => state.shouldCleaChatInterface
+  );
+  const needToHandleResponse = useSelector(
+    (state) => state.needToHandleResponse
+  );
   const screenSize = Mediaqueries();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const md = new MarkdownIt();
@@ -32,10 +36,10 @@ export const DialogWindow = ({
   };
 
   useEffect(() => {
-    if (shouldClearDiscussion) {
+    if (shouldCleaChatInterface) {
       dialogRef.current.innerHTML = "";
     }
-  }, [modelVersion, shouldClearDiscussion]);
+  }, [modelVersion, shouldCleaChatInterface]);
 
   useEffect(() => {
     if (userContent) {
