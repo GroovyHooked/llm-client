@@ -25,7 +25,7 @@ export const setModelVersion = (model) => ({
     payload: model
 })
 
-export const clearDiscussion = (bol) => ({
+export const clearChatInterface = (bol) => ({
     type: types.CLEAR_DISCUSSION,
     payload: bol
 })

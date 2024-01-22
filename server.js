@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
 import express from 'express';
-import { execa } from 'execa'
 import { fileURLToPath } from "url";
 import path from "path";
 import { LlamaModel, LlamaContext, LlamaChatSession } from "node-llama-cpp";
@@ -9,12 +8,12 @@ dotenv.config();
 const app = express();
 app.use(express.json())
 
-let __dirname = path.dirname(fileURLToPath(import.meta.url));
-__dirname = __dirname + "/src/";
-// const modelVersion1 = "mistral-7b-instruct-v0.1.Q2_K.gguf"
-const modelVersion2 = "mistral-7b-instruct-v0.2.Q2_K.gguf"
+const __dirname = path.dirname(fileURLToPath(import.meta.url)) + "/src/";
+const mistralVersion1 = "mistral-7b-instruct-v0.1.Q2_K.gguf"
+const mistralVersion2 = "mistral-7b-instruct-v0.2.Q2_K.gguf"
+const llamaVersion2 = "llama-2-7b-chat.Q4_K_M.gguf"
 
-const createMistralSession = async (modelPath) => {
+const createModelSession = async (modelPath) => {
   const model = new LlamaModel({
     modelPath: path.join(__dirname, "models", modelPath)
   });
@@ -23,7 +22,8 @@ const createMistralSession = async (modelPath) => {
   return session;
 }
 
-let session = await createMistralSession(modelVersion2);
+let mistralSession = await createModelSession(mistralVersion2);
+let llamaSession = await createModelSession(llamaVersion2);
 
 // Add CORS headers
 app.use((req, res, next) => {
@@ -39,43 +39,21 @@ app.get('/', (req, res) => {
   res.json({ currentUrl });
 })
 
-app.get('/reset', async (req, res) => {
-  session = await createMistralSession(modelVersion2);
-  console.log('Session reset');
-})
-
-
-app.post('/api', async (req, res) => {
+app.post('/local-model', async (req, res) => {
   const { messages, model } = req.body;
   if (model === 'llama') {
-    const command = '/Users/thomascariot/dev/llama.cpp/main';
-    const args = [
-      '-m',
-      '/Users/thomascariot/dev/llama.cpp/models/llama-2-7b-chat.Q4_K_M.gguf',
-      '-n',
-      '1024',
-      '-ngl',
-      '1',
-      '-p',
-      messages,
-    ];
-
     try {
-      const { stdout } = await execa(command, args);
-      return res.json({ stdout }); 
+      const answer = await llamaSession.prompt(messages);
+      return res.json({ answer }); 
     } catch (error) {
       console.error(`Erreur d'exécution: ${error.message}`);
       res.status(500).json({ error: 'Une erreur s\'est produite' });
       return error;
     }
   }
-});
-
-app.post('/mistralai', async (req, res) => {
-  const { messages, model } = req.body;
   if (model === 'mistral') {
     try {
-      const answer = await session.prompt(messages);
+      const answer = await mistralSession.prompt(messages);
       return res.json({ answer }); 
     } catch (error) {
       console.error(`Erreur d'exécution: ${error.message}`);
@@ -84,7 +62,6 @@ app.post('/mistralai', async (req, res) => {
     }
   }
 });
-
 
 const port = 3000
 app.listen(port, () => console.log(`Server running on port ${port}`))
