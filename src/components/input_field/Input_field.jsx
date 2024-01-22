@@ -1,9 +1,9 @@
 import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  setUserContent,
-  setDialogContent,
-  handleModelResponse,
+  setUserInput,
+  setconversationHistory,
+  setIsModelHandlingData,
 } from "../../state_management/actions.js";
 import { Mediaqueries } from "../../utils/mediaQueries.js";
 import sendIcon from "../../assets/send.png";
@@ -14,7 +14,7 @@ export const InputField = () => {
   const dispatch = useDispatch();
 
   const promptContent = useSelector((state) => state.promptContent);
-  const dialogContent = useSelector((state) => state.dialogContent);
+  const conversationHistory = useSelector((state) => state.conversationHistory);
 
   const [inputText, setInputText] = useState("");
   const textareaRef = useRef(null);
@@ -22,9 +22,9 @@ export const InputField = () => {
   const screenSize = Mediaqueries();
 
   const handleInputOnEnter = (text) => {
-    dispatch(dispatch(setDialogContent(dialogContent, "user", text)))
-    dispatch(setUserContent(text))
-    dispatch(handleModelResponse(true))
+    dispatch(dispatch(setconversationHistory(conversationHistory, "user", text)))
+    dispatch(setUserInput(text))
+    dispatch(setIsModelHandlingData(true))
   };
 
   const handleInputChange = (event) => {

@@ -1,21 +1,21 @@
 import * as types from './action_types.js';
 
-export const setUserContent = (text) => ({
+export const setUserInput = (text) => ({
     type: types.SET_USER_CONTENT,
     payload: text
 })
 
-export const setModelResponse = (text) => ({
+export const setModelOutput = (text) => ({
     type: types.SET_MODEL_RESPONSE,
     payload: text,
 })
 
-export const setDialogContent = (dialogContent, role, content) => ({
+export const setconversationHistory = (conversationHistory, role, content) => ({
     type: types.SET_DIALOG_CONTENT,
-    payload: [...dialogContent, { role, content }],
+    payload: [...conversationHistory, { role, content }],
 })
 
-export const handleModelResponse = (bol) => ({
+export const setIsModelHandlingData = (bol) => ({
     type: types.HANDLE_MODEL_RESPONSE,
     payload: bol
 })

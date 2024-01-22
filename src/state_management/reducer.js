@@ -1,8 +1,8 @@
 const initialState = {
-  userContent: "",
-  gptResponse: "",
-  dialogContent: [],
-  needToHandleResponse: false,
+  lastInputFromUser: "",
+  lastOutputFromModel: "",
+  conversationHistory: [],
+  isModelHandlingData: false,
   modelVersion: "mistral",
   shouldCleaChatInterface: false,
   tempInputValue: 0,
@@ -16,17 +16,17 @@ const initialState = {
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case "SET_USER_CONTENT":
-      return { ...state, userContent: action.payload };
+      return { ...state, lastInputFromUser: action.payload };
     case "SET_MODEL_RESPONSE":
-      return { ...state, gptResponse: action.payload };
+      return { ...state, lastOutputFromModel: action.payload };
     case "SET_DIALOG_CONTENT":
-      return { ...state, dialogContent: action.payload };
+      return { ...state, conversationHistory: action.payload };
     case "HANDLE_MODEL_RESPONSE":
-      return { ...state, needToHandleResponse: action.payload };
+      return { ...state, isModelHandlingData: action.payload };
     case "SET_MODEL_VERSION":
       return { ...state, modelVersion: action.payload };
     case "CLEAR_DISCUSSION":
-      action.payload ? state.dialogContent = [] : null;
+      action.payload ? state.conversationHistory = [] : null;
       return { ...state, shouldCleaChatInterface: action.payload  };
     case "TEMP_INPUT_VALUE":
       return { ...state, tempInputValue: action.payload };

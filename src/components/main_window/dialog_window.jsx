@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import MarkdownIt from "markdown-it";
 // import ReactMarkdown from "react-markdown";
 import { Mediaqueries } from "../../utils/mediaQueries.js";
@@ -10,15 +10,15 @@ import { Loader } from "../loader/loader.jsx";
 export const DialogWindow = () => {
   const dialogRef = useRef(null);
   const dialogContainerRef = useRef(null); // Reference to the parent container
-  const userContent = useSelector((state) => state.userContent);
-  const gptContent = useSelector((state) => state.gptResponse);
+  const lastInputFromUser = useSelector((state) => state.lastInputFromUser);
+  const modelOutput = useSelector((state) => state.lastOutputFromModel);
   const modelVersion = useSelector((state) => state.modelVersion);
 
   const shouldCleaChatInterface = useSelector(
     (state) => state.shouldCleaChatInterface
   );
-  const needToHandleResponse = useSelector(
-    (state) => state.needToHandleResponse
+  const isModelHandlingData = useSelector(
+    (state) => state.isModelHandlingData
   );
   const screenSize = Mediaqueries();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -42,21 +42,21 @@ export const DialogWindow = () => {
   }, [modelVersion, shouldCleaChatInterface]);
 
   useEffect(() => {
-    if (userContent) {
-      dialogRef.current.innerHTML += `<div class="message user" >${userContent}</div>`;
+    if (lastInputFromUser) {
+      dialogRef.current.innerHTML += `<div class="message user" >${lastInputFromUser}</div>`;
       scrollToBottom();
     }
-  }, [userContent]);
+  }, [lastInputFromUser]);
 
   useEffect(() => {
-    if (gptContent) {
-      const htmlContent = md.render(gptContent);
+    if (modelOutput) {
+      const htmlContent = md.render(modelOutput);
       dialogRef.current.innerHTML += `<div class="message gpt">
                                         ${htmlContent}
                                       </div></div>`;
     }
     scrollToBottom();
-  }, [gptContent]);
+  }, [modelOutput]);
 
   return (
     <div
@@ -69,7 +69,7 @@ export const DialogWindow = () => {
     >
       <div className="display-model">{modelVersion[0].toUpperCase() + modelVersion.slice(1)}</div>
       <div className="dialog" ref={dialogRef}></div>
-      {needToHandleResponse && <Loader />}
+      {isModelHandlingData && <Loader />}
     </div>
   );
 };
