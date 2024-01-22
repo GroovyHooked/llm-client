@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./WebPage.css";
-import { Sidebar } from "./components/Sidebar/Sidebar.jsx";
-import { DialogWindow } from "./components/main_window/DialogWindow.jsx";
-import { InputField } from "./components/InputField/InputField.jsx";
+import { Sidebar } from "./components/Sidebar/sidebar.jsx";
+import { DialogWindow } from "./components/main_window/dialog_window.jsx";
+import { InputField } from "./components/InputField/Input_field.jsx";
 import { sendMessage, communicateWithLlama, communicateWithMistral } from "./utils/communication.js";
 import { prompts } from "./utils/prompts.js";
 import {
@@ -19,7 +19,7 @@ import {
   setMaxTokens,
   setPromptCategory,
   setPromptContent,
-} from "./state_management/action.js";
+} from "./state_management/action_creator.js";
 
 
 export const WebPage = () => {
@@ -51,32 +51,42 @@ export const WebPage = () => {
     });
   };
 
-  useEffect(() => {
-    dispatch(setTempValue(Math.round(tempInputValue * 0.01 * 100) / 100));
-  }, [tempInputValue]);
+  const handleInputEnter = (text) => {
+    dispatch(dispatch(setDialogContent(dialogContent, "user", text)))
+    dispatch(setUserContent(text))
+    dispatch(handleModelResponse(true))
+  };
 
-  useEffect(() => {
-    if (dialogContent.length > 0 && needToHandleResponse) {
-      if(modelVersion === "gpt-3.5-turbo" || modelVersion === "gpt-4"){
-        handleGPTresponse(dialogContent);
-      }
-      if(modelVersion === 'llama'){
-        handleLlamaResponse()
-      }
-      if(modelVersion === 'mistral'){
-        handleMistralResponse()
-      }
+  const changeModel = (model) => {
+    if (model.target.className === "gpt3-model") {
+      dispatch(setModelVersion("gpt-3.5-turbo"))
+      dispatch(setMaxTokens(4096))
+    } else if (model.target.className === "gpt4-model") {
+      dispatch(setModelVersion("gpt-4"))
+      dispatch(setMaxTokens(8192))
+    } else if (model.target.className === "llama"){
+      dispatch(setModelVersion("llama"))
+      dispatch(setMaxTokens(508))
+    } else if (model.target.className === "mistral"){
+      dispatch(setModelVersion("mistral"))
+      dispatch(setMaxTokens(508))
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dialogContent, needToHandleResponse]);
+  };
+
+  const clearDialog = () => {
+    dispatch(clearDiscussion(true))
+    setTimeout(() => {
+      dispatch(clearDiscussion(false))
+    }, 1000);
+  };
 
   async function handleLlamaResponse(){
     try {
       const response = await communicateWithLlama(dialogContent)
-      dispatch(handleModelResponse(false));
-      dispatch(setModelResponse(response));
-      dispatch(setDialogContent(dialogContent, "assistant", response));
-    } catch(error){
+      dispatch(handleModelResponse(false))
+      dispatch(setModelResponse(response))
+      dispatch(setDialogContent(dialogContent, "assistant", response))
+    } catch(erro){
       console.error(error)
     }
   }
@@ -102,40 +112,32 @@ export const WebPage = () => {
       );
       dispatch(handleModelResponse(false));
       dispatch(setModelResponse(response));
-      dispatch(setDialogContent(dialogContent, "assistant", response));
+      dispatch(dispatch(setDialogContent(dialogContent, "assistant", response)))
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleInputEnter = (text) => {
-    dispatch(setDialogContent(dialogContent, "user", text));
-    dispatch(setUserContent(text));
-    dispatch(handleModelResponse(true));
+  const modelHandlers = {
+    "gpt-3.5-turbo": handleGPTresponse,
+    "gpt-4": handleGPTresponse,
+    "llama": handleLlamaResponse,
+    "mistral": handleMistralResponse
   };
 
-  const changeModel = (model) => {
-    if (model.target.className === "gpt3-model") {
-      dispatch(setModelVersion("gpt-3.5-turbo"));
-      dispatch(setMaxTokens(4096));
-    } else if (model.target.className === "gpt4-model") {
-      dispatch(setModelVersion("gpt-4"));
-      dispatch(setMaxTokens(8192));
-    } else if (model.target.className === "llama"){
-      dispatch(setModelVersion("llama"));
-      dispatch(setMaxTokens(508));
-    } else if (model.target.className === "mistral"){
-      dispatch(setModelVersion("mistral"));
-      dispatch(setMaxTokens(508));
+  useEffect(() => {
+    if (dialogContent.length > 0 && needToHandleResponse) {
+      const handler = modelHandlers[modelVersion];
+  
+      if (handler) {
+        handler(dialogContent);
+      }
     }
-  };
+  }, [dialogContent, needToHandleResponse, modelVersion]);
 
-  const clearDialog = () => {
-    dispatch(clearDiscussion(true));
-    setTimeout(() => {
-      dispatch(clearDiscussion(false));
-    }, 1000);
-  };
+  useEffect(() => {
+    dispatch(setTempValue(Math.round(tempInputValue * 0.01 * 100) / 100))
+  }, [tempInputValue]);
 
   return (
     <>
