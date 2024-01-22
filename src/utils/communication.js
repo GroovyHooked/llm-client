@@ -1,4 +1,4 @@
-export const sendMessage = async (messages, model, temperature, max_tokens) => {
+export const sendToOpenAiApi = async (messages, model, temperature, max_tokens) => {
   //console.log({ messages, model, temperature, max_tokens })
   try {
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -23,45 +23,28 @@ export const sendMessage = async (messages, model, temperature, max_tokens) => {
   }
 };
 
-export const communicateWithLlama = async (dialogContent) => {
-  console.log({ dialogContent: dialogContent[dialogContent.length - 1].content });
-  return await fetch('http://localhost:3000/api', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      messages: dialogContent[dialogContent.length - 1].content,
-      model: 'llama',
-      temperature: 0,
-      max_tokens: 300,
-    }),
-  })
-    .then(response => response.json())
-    .then(data => {
-      console.log({ data })
-      return data.stdout
-    })
-    .catch(error => console.error(error));
-}
-
-export const communicateWithMistral = async (dialogContent) => {
-  // Patern: <s>[INST] Instruction [/INST] Model answer</s>[INST] Follow-up instruction [/INST]
+export const sendToLocalModel = async (dialogContent, model) => {
   let message = '';
-  if(dialogContent.length === 1) {
-    message = `<s>[INST]${dialogContent[dialogContent.length - 1].content}[/INST]`
-  } else {
-    message = `<s>[INST]${dialogContent[dialogContent.length - 3].content}[/INST]${dialogContent[dialogContent.length - 2].content}</s>[INST]${dialogContent[dialogContent.length - 1].content}[/INST]` 
-  }
 
-  return fetch('http://localhost:3000/mistralai', {
+  if(model === 'llama') {
+    message = dialogContent[dialogContent.length - 1].content
+  }
+  if(model === 'mistral') {
+  // Patern: <s>[INST] Instruction [/INST] Model answer</s>[INST] Follow-up instruction [/INST]
+    if(dialogContent.length === 1) {
+      message = `<s>[INST]${dialogContent[dialogContent.length - 1].content}[/INST]`
+    } else {
+      message = `<s>[INST]${dialogContent[dialogContent.length - 3].content}[/INST]${dialogContent[dialogContent.length - 2].content}</s>[INST]${dialogContent[dialogContent.length - 1].content}[/INST]` 
+    }
+  }
+  return fetch('http://localhost:3000/local-model', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      messages: `<s>[INST]${dialogContent[dialogContent.length - 1].content}[/INST]`,
-      model: 'mistral',
+      messages: message,
+      model: model,
       temperature: 0,
       max_tokens: 10,
     }),

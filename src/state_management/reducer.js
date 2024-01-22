@@ -4,7 +4,7 @@ const initialState = {
   dialogContent: [],
   needToHandleResponse: false,
   modelVersion: "mistral",
-  shouldClearDiscussion: false,
+  shouldCleaChatInterface: false,
   tempInputValue: 0,
   tempValue: 0,
   tokenValue: 1000,
@@ -27,7 +27,7 @@ const reducer = (state = initialState, action) => {
       return { ...state, modelVersion: action.payload };
     case "CLEAR_DISCUSSION":
       action.payload ? state.dialogContent = [] : null;
-      return { ...state, shouldClearDiscussion: action.payload  };
+      return { ...state, shouldCleaChatInterface: action.payload  };
     case "TEMP_INPUT_VALUE":
       return { ...state, tempInputValue: action.payload };
     case "TEMP_VALUE":

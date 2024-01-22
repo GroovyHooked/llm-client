@@ -27,3 +27,4 @@ dist-ssr
 # models
 mistral-7b-instruct-v0.1.Q2_K.gguf
 mistral-7b-instruct-v0.2.Q2_K.gguf
+llama-2-7b-chat.Q4_K_M.gguf
