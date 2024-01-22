@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { Mediaqueries } from "../../utils/mediaQueries.js";
 import sendIcon from "../../assets/send.png";
-import "./inputField.css";
+import "./input_field.css";
 
 // eslint-disable-next-line react/prop-types
 export const InputField = ({ onEnter, promptContent }) => {

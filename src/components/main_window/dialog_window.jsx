@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import MarkdownIt from "markdown-it";
 // import ReactMarkdown from "react-markdown";
 import { Mediaqueries } from "../../utils/mediaQueries.js";
-import "./dialogWindow.css";
+import "./dialog_window.css";
 import { Loader } from "../loader/loader.jsx";
 
 export const DialogWindow = ({

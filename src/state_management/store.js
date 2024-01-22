@@ -1,5 +1,5 @@
 import { createStore } from 'redux';
-import reducer from './reducers.js'
+import reducer from './reducer.js'
 
 // Enable Redux DevTools Extension
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

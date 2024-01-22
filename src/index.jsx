@@ -1,9 +1,8 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import "./WebPage.css";
-import { Sidebar } from "./components/Sidebar/sidebar.jsx";
+import { Sidebar } from "./components/sidebar/sidebar.jsx";
 import { DialogWindow } from "./components/main_window/dialog_window.jsx";
-import { InputField } from "./components/InputField/Input_field.jsx";
+import { InputField } from "./components/input_field/Input_field.jsx";
 import { sendMessage, communicateWithLlama, communicateWithMistral } from "./utils/communication.js";
 import { prompts } from "./utils/prompts.js";
 import {
@@ -19,10 +18,10 @@ import {
   setMaxTokens,
   setPromptCategory,
   setPromptContent,
-} from "./state_management/action_creator.js";
+} from "./state_management/actions.js";
 
 
-export const WebPage = () => {
+export const ChatInterface = () => {
   const dispatch = useDispatch();
 
   const userContent = useSelector((state) => state.userContent);
