@@ -15,13 +15,13 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case "SET_USER_CONTENT":
+    case "SET_USER_INPUT":
       return { ...state, lastInputFromUser: action.payload };
-    case "SET_MODEL_RESPONSE":
+    case "SET_MODEL_OUPUT":
       return { ...state, lastOutputFromModel: action.payload };
     case "SET_DIALOG_CONTENT":
       return { ...state, conversationHistory: action.payload };
-    case "HANDLE_MODEL_RESPONSE":
+    case "HANDLE_MODEL_STATUS":
       return { ...state, isModelHandlingData: action.payload };
     case "SET_MODEL_VERSION":
       return { ...state, modelVersion: action.payload };

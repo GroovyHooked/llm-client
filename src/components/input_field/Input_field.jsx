@@ -55,6 +55,8 @@ export const InputField = () => {
   };
 
   const handleSendClick = () => {
+    const textArea = textareaRef.current;
+    const inputDiv = divRef.current;
     handleInputOnEnter(inputText);
     setInputText("");
     textArea.style.height = `20px`;

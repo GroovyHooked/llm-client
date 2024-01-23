@@ -5,7 +5,7 @@ import MarkdownIt from "markdown-it";
 // import ReactMarkdown from "react-markdown";
 import { Mediaqueries } from "../../utils/mediaQueries.js";
 import "./dialog_window.css";
-import { Loader } from "../loader/loader.jsx";
+import { Spinner } from "../spinner/spinner.jsx";
 
 export const DialogWindow = () => {
   const dialogRef = useRef(null);
@@ -69,7 +69,7 @@ export const DialogWindow = () => {
     >
       <div className="display-model">{modelVersion[0].toUpperCase() + modelVersion.slice(1)}</div>
       <div className="dialog" ref={dialogRef}></div>
-      {isModelHandlingData && <Loader />}
+      {isModelHandlingData && <Spinner />}
     </div>
   );
 };
