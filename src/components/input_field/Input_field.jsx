@@ -2,17 +2,15 @@ import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setUserInput,
-  setconversationHistory,
-  setIsModelHandlingData,
-} from "../../state_management/actions.js";
-import { Mediaqueries } from "../../utils/mediaQueries.js";
+  setConversationHistory,
+  askModelToHandleData,
+} from "../../state_management/actions";
+import { Mediaqueries } from "../../utils/mediaQueries";
 import sendIcon from "../../assets/send.png";
 import "./input_field.css";
 
-// eslint-disable-next-line react/prop-types
 export const InputField = () => {
   const dispatch = useDispatch();
-
   const promptContent = useSelector((state) => state.promptContent);
   const conversationHistory = useSelector((state) => state.conversationHistory);
 
@@ -22,41 +20,38 @@ export const InputField = () => {
   const screenSize = Mediaqueries();
 
   const handleInputOnEnter = (text) => {
-    dispatch(dispatch(setconversationHistory(conversationHistory, "user", text)))
-    dispatch(setUserInput(text))
-    dispatch(setIsModelHandlingData(true))
+    dispatch(setConversationHistory(conversationHistory, "user", text));
+    dispatch(setUserInput(text));
+    dispatch(askModelToHandleData(true));
   };
 
   const handleInputChange = (event) => {
-    const textArea = textareaRef.current;
-    const inputDiv = divRef.current;
+    const { current: textArea } = textareaRef;
+    const { current: inputDiv } = divRef;
     textArea.style.height = `${Math.min(textArea.scrollHeight, 120)}px`;
     setInputText(event.target.value);
-    if (!textArea.value) textArea.style.height = `20px`;
-    if (textArea.style.height > `75px`) {
-      inputDiv.style.height = `${Math.min(textArea.scrollHeight + 40, 150)}px`;
-    }
-    if (!textArea.value) inputDiv.style.height = `85px`;
+    textArea.style.height = textArea.value ? textArea.style.height : `20px`;
+    inputDiv.style.height = textArea.style.height > `75px` ? `${Math.min(textArea.scrollHeight + 40, 150)}px` : `85px`;
   };
 
   const handleKeyPress = (event) => {
-    const textArea = textareaRef.current;
-    const inputDiv = divRef.current;
-    if (event.shiftKey && event.key === "Enter") {
+    if (event.key === "Enter") {
       event.preventDefault();
-      setInputText((oldText) => `${oldText}\r\n`);
-    } else if (event.key === "Enter") {
-      event.preventDefault();
-      handleInputOnEnter(inputText);
-      setInputText("");
-      textArea.style.height = `20px`;
-      inputDiv.style.height = `85px`;
+      if (event.shiftKey) {
+        setInputText((oldText) => `${oldText}\r\n`);
+      } else {
+        resetInputField();
+      }
     }
   };
 
   const handleSendClick = () => {
-    const textArea = textareaRef.current;
-    const inputDiv = divRef.current;
+    resetInputField();
+  }
+
+  const resetInputField = () => {
+    const { current: textArea } = textareaRef;
+    const { current: inputDiv } = divRef;
     handleInputOnEnter(inputText);
     setInputText("");
     textArea.style.height = `20px`;
@@ -73,8 +68,8 @@ export const InputField = () => {
   };
 
   useEffect(() => {
-    const textArea = textareaRef.current;
-    const inputDiv = divRef.current;
+    const { current: textArea } = textareaRef;
+    const { current: inputDiv } = divRef;
     if (promptContent) {
       setInputText(insertNewlines(promptContent, 12));
       textArea.style.height = `120px`;
@@ -99,10 +94,10 @@ export const InputField = () => {
           onChange={handleInputChange}
           onKeyDown={handleKeyPress}
           placeholder="Send a message"
-        ></textarea>
+        />
       </div>
       <button className="btn btn-send" onClick={handleSendClick}>
-        <img src={sendIcon} className="send-icon"></img>
+        <img src={sendIcon} className="send-icon" alt="send" />
       </button>
     </div>
   );

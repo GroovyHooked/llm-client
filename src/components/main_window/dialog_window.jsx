@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import MarkdownIt from "markdown-it";
 // import ReactMarkdown from "react-markdown";
@@ -7,69 +7,52 @@ import { Mediaqueries } from "../../utils/mediaQueries.js";
 import "./dialog_window.css";
 import { Spinner } from "../spinner/spinner.jsx";
 
+
 export const DialogWindow = () => {
-  const dialogRef = useRef(null);
-  const dialogContainerRef = useRef(null); // Reference to the parent container
   const lastInputFromUser = useSelector((state) => state.lastInputFromUser);
   const modelOutput = useSelector((state) => state.lastOutputFromModel);
   const modelVersion = useSelector((state) => state.modelVersion);
-
-  const shouldCleaChatInterface = useSelector(
-    (state) => state.shouldCleaChatInterface
-  );
-  const isModelHandlingData = useSelector(
-    (state) => state.isModelHandlingData
-  );
+  const shouldCleaChatInterface = useSelector((state) => state.shouldCleaChatInterface);
+  const isModelHandlingData = useSelector((state) => state.isModelHandlingData);
   const screenSize = Mediaqueries();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const md = new MarkdownIt();
+  const md = useMemo(() => new MarkdownIt(), []);
 
-  const scrollToBottom = () => {
-    dialogContainerRef.current.scrollTop =
-      dialogContainerRef.current.scrollHeight;
-    const lastMessage = dialogContainerRef.current.querySelector(
-      ".message:last-child"
-    );
-    if (lastMessage) {
-      lastMessage.focus();
-    }
-  };
+  const [messages, setMessages] = useState([]);
+
+  const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 
   useEffect(() => {
     if (shouldCleaChatInterface) {
-      dialogRef.current.innerHTML = "";
+      setMessages([]);
     }
-  }, [modelVersion, shouldCleaChatInterface]);
+  }, [shouldCleaChatInterface]);
 
   useEffect(() => {
     if (lastInputFromUser) {
-      dialogRef.current.innerHTML += `<div class="message user" >${lastInputFromUser}</div>`;
-      scrollToBottom();
+      setMessages((prevMessages) => [...prevMessages, { type: 'user', content: lastInputFromUser }]);
     }
   }, [lastInputFromUser]);
 
   useEffect(() => {
     if (modelOutput) {
       const htmlContent = md.render(modelOutput);
-      dialogRef.current.innerHTML += `<div class="message gpt">
-                                        ${htmlContent}
-                                      </div></div>`;
+      setMessages((prevMessages) => [...prevMessages, { type: 'model', content: htmlContent }]);
     }
-    scrollToBottom();
   }, [modelOutput]);
 
   return (
     <div
-      className={
-        screenSize.isLarge
-          ? "dialog-div dialog-div-large"
-          : "dialog-div dialog-div-small"
-      }
-      ref={dialogContainerRef} // Set the ref for the parent container
+      className={screenSize.isLarge ? "dialog-div dialog-div-large" : "dialog-div dialog-div-small"}
     >
-      <div className="display-model">{modelVersion[0].toUpperCase() + modelVersion.slice(1)}</div>
-      <div className="dialog" ref={dialogRef}></div>
+      <div className="display-model">{capitalizeFirstLetter(modelVersion)}</div>
+      <div className="dialog">
+        {messages.map((message, index) => (
+          <div key={index} className={`message ${message.type}`} dangerouslySetInnerHTML={{ __html: message.content }}></div>
+        ))}
+      </div>
       {isModelHandlingData && <Spinner />}
     </div>
   );
 };
+
+

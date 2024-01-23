@@ -23,12 +23,12 @@ export const setModelOutput = (text) => ({
     payload: text,
 })
 
-export const setconversationHistory = (conversationHistory, role, content) => ({
+export const setConversationHistory = (conversationHistory, role, content) => ({
     type: SET_DIALOG_CONTENT,
     payload: [...conversationHistory, { role, content }],
 })
 
-export const setIsModelHandlingData = (bol) => ({
+export const askModelToHandleData = (bol) => ({
     type: HANDLE_MODEL_STATUS,
     payload: bol
 })

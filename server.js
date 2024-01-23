@@ -34,34 +34,10 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/', (req, res) => {
-  const currentUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
-  console.log(`Current URL: ${currentUrl}`);
-  res.json({ currentUrl });
-})
-
 app.post('/local-model', async (req, res) => {
   const { messages, model, temperature, max_tokens } = req.body;
-  if (model === 'llama') {
-    try {
-      const answer = await llamaSession.prompt(messages);
-      return res.json({ answer });
-    } catch (error) {
-      console.error(`Erreur d'exécution: ${error.message}`);
-      res.status(500).json({ error: 'Une erreur s\'est produite' });
-      return error;
-    }
-  }
-  if (model === 'mistral') {
-    try {
-      const answer = await mistralSession.prompt(messages);
-      return res.json({ answer });
-    } catch (error) {
-      console.error(`Erreur d'exécution: ${error.message}`);
-      res.status(500).json({ error: 'Une erreur s\'est produite' });
-      return error;
-    }
-  }
+  if (model === 'llama') fetchLocalModel(llamaSession, messages, res)
+  if (model === 'mistral') fetchLocalModel(mistralSession, messages, res);
   if (model === "gpt-3.5-turbo" || model === "gpt-4") {
     const answer = await fetchOpenAi(messages, model, temperature, max_tokens);
     return res.json({ answer });
@@ -88,6 +64,17 @@ async function fetchOpenAi(messages, model, temperature, max_tokens) {
   } catch (error) {
     console.error(error);
     return "An error occurred";
+  }
+}
+
+async function fetchLocalModel(session, messages, res) {
+  try {
+    const answer = await session.prompt(messages);
+    return res.json({ answer });
+  } catch (error) {
+    console.error(`Erreur d'exécution: ${error.message}`);
+    res.status(500).json({ error: 'Une erreur s\'est produite' });
+    return error;
   }
 }
 

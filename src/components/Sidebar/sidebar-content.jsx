@@ -1,6 +1,6 @@
 // SidebarContent.js
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { clearChatInterface } from "../../state_management/actions.js";
 import { SwitchModel } from "./switch_model.jsx";
 import { Temperature } from "./temperature.jsx";

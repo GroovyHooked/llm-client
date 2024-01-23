@@ -6,8 +6,8 @@ import { InputField } from "./components/input_field/Input_field.jsx";
 import { processDataWithBackend } from "./utils/communication.js";
 import {
   setModelOutput,
-  setconversationHistory,
-  setIsModelHandlingData,
+  setConversationHistory,
+  askModelToHandleData,
 } from "./state_management/actions.js";
 
 
@@ -26,9 +26,9 @@ export const ChatInterface = () => {
   async function handleModelResponse(text, model, temp, token){
     try {
       const response = await processDataWithBackend(text, model, temp, token)
-      dispatch(setIsModelHandlingData(false))
+      dispatch(askModelToHandleData(false))
       dispatch(setModelOutput(response))
-      dispatch(setconversationHistory(text, "assistant", response))
+      dispatch(setConversationHistory(text, "assistant", response))
     } catch (error) {
       console.error(error)
     }
