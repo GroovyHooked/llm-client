@@ -9,7 +9,11 @@
 }
 
 .textarea-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
   width: 95%;
   min-height: 40px;
@@ -26,21 +30,61 @@ textarea {
   border-radius: 10px;
   overflow: auto;
   outline: none;
+  -webkit-box-shadow: none;
   box-shadow: none;
-  resize: none; 
+  resize: none;
   border: none;
+}
+
+textarea::-webkit-input-placeholder {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+  color: #999;
+}
+
+textarea::-moz-placeholder {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+}
+
+textarea:-ms-input-placeholder {
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  color: #999;
+}
+
+textarea::-ms-input-placeholder {
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  color: #999;
 }
 
 textarea::placeholder {
   position: absolute;
   top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
   transform: translateY(-50%);
-  color: #999; 
+  color: #999;
 }
 
 .input-field {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
   justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
   border: 1px solid rgb(209, 209, 209);
   position: fixed;
@@ -51,6 +95,8 @@ textarea::placeholder {
 }
 
 .input-field-large {
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
   flex: 1;
   left: 230px;
   right: 0;
