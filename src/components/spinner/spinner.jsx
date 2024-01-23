@@ -1,7 +1,7 @@
-import "./loader.css";
+import "./spinner.css";
 
 
-export const Loader = () => {
+export const Spinner = () => {
 
     return (
         <>

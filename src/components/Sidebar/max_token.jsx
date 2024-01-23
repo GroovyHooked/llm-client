@@ -1,13 +1,13 @@
 import { useDispatch, useSelector } from "react-redux";
 import { setTokenValue } from "../../state_management/actions.js";
 
-export const MaxToken = ({ maxTokens }) => {
+export const MaxToken = () => {
     const dispatch = useDispatch();
     const tokenValue = useSelector((state) => state.tokenValue);
-  
+    const maxTokens = useSelector((state) => state.maxTokens);
+
     const handleInputTokenValue = (e) => {
       dispatch(setTokenValue(e.target.valueAsNumber));
-  
     };
   
     return (
