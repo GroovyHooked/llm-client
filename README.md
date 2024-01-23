@@ -1,7 +1,7 @@
 # llm-client
 
 ## Project Description
-llm-client is a chat interface that leverages various models to generate responses to user input. It features two API-based models, GPT-3 and GPT-4, provided by OpenAI, along with two local models, Llama 2 and Mistral. The local models run using the node-llama-cpp library, enabling the execution of large language models on a local machine.
+llm-client is a chat interface that leverages various models to generate responses to user input. It features two API-based models, GPT-3 and GPT-4, provided by OpenAI, along with two local models, Llama 2 and Mistral. The local models run using the `node-llama-cpp` library, enabling the execution of large language models on a local machine.
 
 ## Installation
 To install the project, follow these steps:
