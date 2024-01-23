@@ -21,7 +21,7 @@ export const SwitchModel = () => {
     };
   
     return (
-      <div className="swich-model">
+      <div className="switch-model">
         <button className="gpt3-model" onClick={changeModel}>
           GPT3
         </button>

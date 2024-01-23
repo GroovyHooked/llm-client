@@ -39,7 +39,7 @@
 }
 
 .clear-dialog,
-.swich-model {
+.switch-model {
   border: 0.5px solid white;
   border-radius: 5px;
   height: 40px;
@@ -80,7 +80,7 @@ ul>li {
   text-align: center;
 }
 
-.swich-model {
+.switch-model {
   border: none;
   display: -webkit-box;
   display: -ms-flexbox;
