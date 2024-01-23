@@ -17,8 +17,8 @@ To integrate your OpenAI API key into the project, perform the following steps:
 ## Adding local models
 To include local models in the project, follow these steps:
 1. Download the models from Hugging face ([Mistral](https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q2_K.gguf?download=true) [Llama2](https://huggingface.co/TheBloke/Llama-2-7B-Chat-GGUF/resolve/main/llama-2-7b-chat.Q4_K_M.gguf?download=true))
-2. Create a new directory named `models` inside the `/src` directory of the project
-3. Move the downloaded models into the 'model' directory
+2. Create a new directory `models` inside `/src` 
+3. Move the downloaded models into the `models` directory
 
 ## Usage
 To interact with the chat interface, follow these steps:
